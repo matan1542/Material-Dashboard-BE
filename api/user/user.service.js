@@ -1,7 +1,7 @@
-
 const dbService = require('../../services/db.service')
 const logger = require('../../services/logger.service')
 const ObjectId = require('mongodb').ObjectId
+const bcrypt = require('bcrypt')
 
 module.exports = {
     getById,
@@ -11,12 +11,10 @@ module.exports = {
 
 }
 
-
 async function getById(userId) {
     try {
         const collection = await dbService.getCollection('users')
         const user = await collection.findOne({ _id: ObjectId(userId) })
-        console.log('user from service', user)
         delete user.password
         return user
     } catch (err) {
@@ -24,6 +22,7 @@ async function getById(userId) {
         throw err
     }
 }
+
 async function getByEmail(email) {
     try {
         const collection = await dbService.getCollection('users')
@@ -35,17 +34,27 @@ async function getByEmail(email) {
     }
 }
 
-async function update(user) {
+async function update(userData) {
+    const {user} = userData
+    const saltRounds = 10
     try {
+        const hash = await bcrypt.hash(user.password, saltRounds)
         // peek only updatable fields!
         const userToSave = {
             _id: ObjectId(user._id),
+            username: user.username,
             email: user.email,
-            fullname: user.fullname,
-            score: user.score
+            password: hash,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            city: user.city,
+            country: user.country,
+            postalCode: user.postalCode,
+            aboutMe: user.aboutMe
         }
-        const collection = await dbService.getCollection('user')
-        await collection.updateOne({ '_id': userToSave._id }, { $set: userToSave })
+        console.log('newUser',userToSave._id)
+        const collection = await dbService.getCollection('users')
+       const newUser = await collection.updateOne({ '_id': userToSave._id }, { $set: userToSave })
         return userToSave;
     } catch (err) {
         logger.error(`cannot update user ${user._id}`, err)
@@ -56,11 +65,17 @@ async function update(user) {
 async function add(user) {
     try {
         const userToAdd = {
+            username: user.username,
             email: user.email,
             password: user.password,
-            fullname: user.fullname
+            firstName: user.firstName,
+            lastName: user.lastName,
+            city: user.city,
+            country: user.country,
+            company: user.company,
+            postalCode: user.postalCode,
+            aboutMe: user.aboutMe
         }
-        console.log('userToAdd', userToAdd)
         const collection = await dbService.getCollection('users')
         await collection.insertOne(userToAdd)
         return userToAdd
