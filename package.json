@@ -20,6 +20,6 @@
         "mongodb": "^3.2.7"
     },
     "devDependencies": {
-        "nodemon": "1.18.10"
+        "nodemon": "^1.18.10"
     }
 }
