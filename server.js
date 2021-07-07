@@ -41,7 +41,7 @@ app.use('/api/user', userRoutes)
 // so when requesting http://localhost:3030/index.html/car/123 it will still respond with
 // our SPA (single page app) (the index.html file) and allow vue/react-router to take it from there
 app.get('/**', (req, res) => {
-    res.sendFile('index.html', { root: path.join(__dirname, './public') });
+    res.sendFile('index.html', { root: path.join(__dirname, '/public') });
 })
 
 const logger = require('./services/logger.service')
