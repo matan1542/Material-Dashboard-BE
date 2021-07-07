@@ -35,7 +35,6 @@ async function getByEmail(email) {
     }
 }
 
-
 async function update(user) {
     try {
         // peek only updatable fields!
@@ -56,8 +55,6 @@ async function update(user) {
 
 async function add(user) {
     try {
-        // peek only updatable fields!
-
         const userToAdd = {
             email: user.email,
             password: user.password,
@@ -71,33 +68,6 @@ async function add(user) {
         logger.error('cannot insert user', err)
         throw err
     }
-}
-
-// async function checkLogin(credentials){
-// try{
-//     const user = await getByEmail(credentials.email)
-//     if(user.password === credentials.password){
-//         return user
-//     }
-//   } catch (err) {
-//       throw Error('Couldn\'t make login attempt on checkLogin', err)
-//   }
-// }
-
-function _buildCriteria(filterBy) {
-    const criteria = {}
-    if (filterBy.txt) {
-        const txtCriteria = { $regex: filterBy.txt, $options: 'i' }
-        criteria.$or = [
-            {
-                username: txtCriteria
-            },
-            {
-                fullname: txtCriteria
-            }
-        ]
-    }
-    return criteria
 }
 
 
