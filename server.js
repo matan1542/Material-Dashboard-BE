@@ -34,7 +34,6 @@ const userRoutes = require('./api/user/user.routes')
 const setupAsyncLocalStorage = require('./middlewares/setupAls.middleware')
 app.all('*', setupAsyncLocalStorage)
 
-// TODO: check with app.use
 app.get('/api/setup-session', (req, res) =>{
     req.session.connectedAt = Date.now()
     res.end()
