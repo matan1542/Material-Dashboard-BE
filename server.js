@@ -40,9 +40,7 @@ app.use('/api/user', userRoutes)
 // Make every server-side-route to match the index.html
 // so when requesting http://localhost:3030/index.html/car/123 it will still respond with
 // our SPA (single page app) (the index.html file) and allow vue/react-router to take it from there
-app.get('/**', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
+app.use('/static', express(path.join(__dirname, 'public', 'index.html')))
 
 const logger = require('./services/logger.service')
 const port = process.env.PORT || 3030
